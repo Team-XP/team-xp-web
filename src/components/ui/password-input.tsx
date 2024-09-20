@@ -8,8 +8,6 @@ import { cn } from '@/lib/utils'
 const PasswordInput = forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => {
   const [showPassword, setShowPassword] = useState(false)
 
-  console.log({ showPassword })
-
   return (
     <div className="relative">
       <Input
