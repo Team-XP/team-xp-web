@@ -1,19 +1,19 @@
 'use client'
 
+import { LoadingButton } from '@/components/button'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
+import { Separator } from '@/components/ui/separator'
+import { useToast } from '@/hooks/use-toast'
 import { loginSchema } from '@/schemas/login'
 import type { LoginFormType } from '@/types/login'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { GrGoogle } from 'react-icons/gr'
-import { useToast } from '@/hooks/use-toast'
-import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/ui/password-input'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { LoadingButton } from '@/components/button'
+import { useForm } from 'react-hook-form'
+import { FaFacebookF } from 'react-icons/fa'
+import { GrGoogle } from 'react-icons/gr'
 
 export function LoginForm() {
   const { toast } = useToast()
@@ -65,7 +65,7 @@ export function LoginForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <PasswordInput placeholder="Password" {...field} />
+                <PasswordInput placeholder="Senha" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,15 +77,19 @@ export function LoginForm() {
         </Button>
 
         <LoadingButton isLoading={isLoading}>Entrar</LoadingButton>
-        {/* <div className="flex gap-2 items-center justify-center">
+        <div className="flex gap-2 items-center justify-center">
           <Separator className="w-[45%]" />
-          <p>or</p>
+          <p>ou</p>
           <Separator className="w-[45%]" />
         </div>
         <Button variant="outline">
           <GrGoogle className="mr-2 h-4 w-4" />
-          Sign In with Google
-        </Button> */}
+          Entrar com o Google
+        </Button>
+        <Button variant="outline">
+          <FaFacebookF className="mr-2 h-4 w-4" />
+          Entrar com o Facebook
+        </Button>
       </form>
     </Form>
   )
