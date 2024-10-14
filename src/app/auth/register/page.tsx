@@ -1,7 +1,7 @@
-import { LoginForm } from '@/components/login'
+import { RegisterForm } from '@/components/auth'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
-export default function Login() {
+export default function Register() {
   return (
     <div className="flex items-center justify-center h-screen bg-[url('/images/background.jpg')] bg-cover bg-center px-4">
       <Card className="w-full max-w-md p-6 rounded-lg shadow-lg">
@@ -13,7 +13,7 @@ export default function Login() {
         </CardHeader>
 
         <CardContent className="mt-6">
-          <LoginForm />
+          <RegisterForm />
         </CardContent>
       </Card>
     </div>

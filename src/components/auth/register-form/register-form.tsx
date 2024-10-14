@@ -7,21 +7,22 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
-import { loginSchema } from '@/schemas/login'
-import type { LoginFormType } from '@/types/login'
+import { registerSchema } from '@/schemas/auth'
+import type { RegisterFormType } from '@/types/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaFacebookF } from 'react-icons/fa'
 import { GrGoogle } from 'react-icons/gr'
 
-export function LoginForm() {
+export function RegisterForm() {
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<LoginFormType>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<RegisterFormType>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: '',
       email: '',
       password: ''
     }
@@ -29,23 +30,20 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form
-        noValidate
-        onSubmit={form.handleSubmit(data => {
-          try {
-            setIsLoading(true)
-          } catch (e) {
-            toast({
-              variant: 'destructive',
-              title: 'Ops, ocorreu um erro!',
-              description: 'Por favor, tente novamente mais tarde.'
-            })
-          } finally {
-            // setIsLoading(false)
-          }
-        })}
-        className="flex flex-col gap-4"
-      >
+      <form noValidate className="flex flex-col gap-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input type="text" placeholder="Nome" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="email"
@@ -72,11 +70,8 @@ export function LoginForm() {
           )}
         />
 
-        <Button variant="link" className="w-fit pl-0">
-          Esqueceu a senha?
-        </Button>
+        <LoadingButton isLoading={isLoading}>Cadastre-se</LoadingButton>
 
-        <LoadingButton isLoading={isLoading}>Entrar</LoadingButton>
         <div className="flex gap-2 items-center justify-center">
           <Separator className="w-[45%]" />
           <p>ou</p>
