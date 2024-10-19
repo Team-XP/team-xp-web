@@ -1,9 +1,12 @@
 export async function fetchWrapper<T = unknown>(
   input: string | URL | globalThis.Request,
-  init?: RequestInit
+  init?: Omit<RequestInit, 'body'> & {
+    body: object
+  }
 ): Promise<T> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${input}`, {
     ...init,
+    body: init?.body ? JSON.stringify(init.body) : undefined,
     headers: {
       ...init?.headers,
       'Content-Type': 'application/json'
