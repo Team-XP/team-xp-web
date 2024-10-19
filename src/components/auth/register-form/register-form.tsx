@@ -6,19 +6,15 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Separator } from '@/components/ui/separator'
-import { useToast } from '@/hooks/use-toast'
+import { useCreateUser } from '@/mutations/users'
 import { registerSchema } from '@/schemas/auth'
 import type { RegisterFormType } from '@/types/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaFacebookF } from 'react-icons/fa'
 import { GrGoogle } from 'react-icons/gr'
 
 export function RegisterForm() {
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
-
   const form = useForm<RegisterFormType>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -28,16 +24,22 @@ export function RegisterForm() {
     }
   })
 
+  const { mutateAsync: createUser, isPending } = useCreateUser()
+
   return (
     <Form {...form}>
-      <form noValidate className="flex flex-col gap-4">
+      <form
+        noValidate
+        className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(data => createUser(data))}
+      >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="text" placeholder="Nome" {...field} />
+                <Input type="text" placeholder="Nome completo" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -70,7 +72,9 @@ export function RegisterForm() {
           )}
         />
 
-        <LoadingButton isLoading={isLoading}>Cadastre-se</LoadingButton>
+        <LoadingButton isLoading={isPending} type="submit">
+          Cadastre-se
+        </LoadingButton>
 
         <div className="flex gap-2 items-center justify-center">
           <Separator className="w-[45%]" />
