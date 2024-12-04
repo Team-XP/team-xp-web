@@ -1,6 +1,6 @@
 'use client'
 
-import { LoadingButton } from '@/components/button'
+import { SubmitButton } from '@/components/button/submit-button'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -8,17 +8,23 @@ import { PasswordInput } from '@/components/ui/password-input'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
 import { loginSchema } from '@/schemas/auth'
+import { login, State } from '@/server-actions/auth/login'
 import type { LoginFormType } from '@/types/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { useFormState } from 'react-dom'
+import { FieldPath, useForm } from 'react-hook-form'
 import { FaFacebookF } from 'react-icons/fa'
 import { GrGoogle } from 'react-icons/gr'
 
 export function LoginForm() {
+  const [state, formAction] = useFormState<State, FormData>(login, null)
+
   const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
+
+  const { push } = useRouter()
 
   const form = useForm<LoginFormType>({
     resolver: zodResolver(loginSchema),
@@ -28,25 +34,42 @@ export function LoginForm() {
     }
   })
 
+  const { setError, clearErrors } = form
+
+  useEffect(() => {
+    if (!state) {
+      return
+    }
+
+    clearErrors()
+
+    if (state.status === 'error') {
+      toast({
+        variant: 'destructive',
+        title: 'Ops, ocorreu um erro!',
+        description: state.message
+      })
+
+      state.errors?.forEach(error => {
+        setError(error.path as FieldPath<LoginFormType>, {
+          message: error.message
+        })
+      })
+    }
+
+    if (state.status === 'success') {
+      toast({
+        title: 'Login realizado com sucesso!',
+        description: 'Você foi autenticado com sucesso e agora pode acessar sua conta.'
+      })
+
+      push('/onboarding')
+    }
+  }, [state, setError, clearErrors, toast, push])
+
   return (
     <Form {...form}>
-      <form
-        noValidate
-        onSubmit={form.handleSubmit(data => {
-          try {
-            setIsLoading(true)
-          } catch (e) {
-            toast({
-              variant: 'destructive',
-              title: 'Ops, ocorreu um erro!',
-              description: 'Por favor, tente novamente mais tarde.'
-            })
-          } finally {
-            // setIsLoading(false)
-          }
-        })}
-        className="flex flex-col gap-4"
-      >
+      <form action={formAction} noValidate className="flex flex-col gap-4">
         <FormField
           control={form.control}
           name="email"
@@ -77,7 +100,7 @@ export function LoginForm() {
           Esqueceu a senha?
         </Button>
 
-        <LoadingButton isLoading={isLoading}>Entrar</LoadingButton>
+        <SubmitButton>Entrar</SubmitButton>
         <div className="flex gap-2 items-center justify-center">
           <Separator className="w-[45%]" />
           <p>ou</p>

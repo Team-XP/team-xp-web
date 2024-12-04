@@ -1,6 +1,6 @@
 import { useToast } from '@/hooks/use-toast'
 import type { BaseError } from '@/services/base/types'
-import { createUser } from '@/services/users'
+import { createUsersService } from '@/services/users'
 import type { CreateUserRequest, CreateUserResponse } from '@/services/users/types'
 import { useMutation, UseMutationOptions } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
@@ -10,7 +10,8 @@ export function useCreateUser(
 ) {
   const mutationKey = ['users', 'create']
 
-  const mutationFn = async (variables: CreateUserRequest) => await createUser(variables)
+  const mutationFn = async (variables: CreateUserRequest) =>
+    await createUsersService().createUser(variables)
 
   const { toast } = useToast()
 
