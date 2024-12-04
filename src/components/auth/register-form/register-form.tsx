@@ -81,11 +81,11 @@ export function RegisterForm() {
           <p>ou</p>
           <Separator className="w-[45%]" />
         </div>
-        <Button variant="outline">
+        <Button variant="outline" type="button">
           <GrGoogle className="mr-2 h-4 w-4" />
           Entrar com o Google
         </Button>
-        <Button variant="outline">
+        <Button variant="outline" type="button">
           <FaFacebookF className="mr-2 h-4 w-4" />
           Entrar com o Facebook
         </Button>
